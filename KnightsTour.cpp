@@ -9,23 +9,39 @@ Mod History
 #include <math.h>
 #include <list>
 #include <stack>
+#include <vector>
 
+/*
+using nested vectors rather than array due to being able to actually alter vector size,
+giving the ability to make a variable the size for our board
+*/
 class Knight
 {
 public:
+    int xStarting;
+    int yStarting;
+    int boardSize;
+    std::vector<std::vector<int> > wholeBoard;
     int xMove;
     int yMove;
-    int boardSize;
-    Knight(int bSize, int xStart, int yStart)
+    Knight(std::vector<std::vector<int> > Board, int xStart, int yStart, int bSize)
     {
         boardSize=bSize;
-        xMove=xStart;
-        yMove=yStart;
+        wholeBoard = Board;
+        xStarting=xStart;
+        yStarting=yStart;
     }
-    int wholeBoard[boardSize][boardSize];
-    void KnightMove(xMove, yMove, wholeBoard)
+    void KnightMove(int xMove, int yMove, std::vector<std::vector<int> > Board)
     {
-        
+
+    }
+    /*
+    boolean check if new spots x and y are valid spots for movement
+    in board Board of size S
+    */
+    bool safeMove(int x, int y, std::vector<std::vector<int> > board, int bSize)
+    {
+        return (x>=0 && x<bSize && y >=0 && y<bSize)?true:false;
     }
 };
 int main()
@@ -35,7 +51,10 @@ int main()
     int boardSize;
     int startX;
     int startY;
-    int board[][];
+    /*using vector of vectors for board due to flexibility*/
+    std::vector<std::vector<int> > board;
+    /*initializing memory for the total size of board*/
+    board.reserve(boardSize*boardSize);
 
     std::cout << "Welcome to the Knight's Tour" << std::endl;
     std::cout << "How big is your board?" << std::endl;
@@ -44,5 +63,5 @@ int main()
     std::cin >> startX;
     std::cout << "What would you like the starting y coordinate to be?" << std::endl;
     std::cin >> startY;
-    Knight Gallahad=new Knight(boardSize,startX,startY);
+    Knight Gallahad(board,startX,startY,boardSize);
 }
