@@ -15,11 +15,17 @@ class Knight
 public:
     int xMove;
     int yMove;
-    int board[][];
     int boardSize;
-
-    void KnightMove(xMove, yMove, board[boardSize][boardSize])
+    Knight(int bSize, int xStart, int yStart)
     {
+        boardSize=bSize;
+        xMove=xStart;
+        yMove=yStart;
+    }
+    int wholeBoard[boardSize][boardSize];
+    void KnightMove(xMove, yMove, wholeBoard)
+    {
+        
     }
 };
 int main()
@@ -27,8 +33,16 @@ int main()
     std::list<int> initalPos;
     std::stack<int> prevMoves;
     int boardSize;
+    int startX;
+    int startY;
+    int board[][];
 
     std::cout << "Welcome to the Knight's Tour" << std::endl;
     std::cout << "How big is your board?" << std::endl;
     std::cin >> boardSize;
+    std::cout << "What would you like your knight's starting X coordinate to be?" << std::endl;
+    std::cin >> startX;
+    std::cout << "What would you like the starting y coordinate to be?" << std::endl;
+    std::cin >> startY;
+    Knight Gallahad=new Knight(boardSize,startX,startY);
 }
