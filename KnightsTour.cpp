@@ -11,24 +11,16 @@ Created: 09/02/20
 #include <list>
 #include <stack>
 
-/*
-structs for holding knight's current square
-and various movement patterns
-*/
 struct currentSquare
 {
-    int xSpot, ySpot;
+    int xSpot;
+    int ySpot;
 };
-//gives warning about inclass initialization being c++11 standard
-struct Move_pattern
+struct knightMoves
 {
-    int xChoices[8] = {1, 1, 2, 2, -1, -1, -2, -2};
-    int yChoices[8] = {2, -2, 1, -1, 2, -2, 1, -1};
+    int xMove[8]={1,1,-1,-1,2,2,-2,-2};
+    int yMove[8]={2,-2,2,-2,1,-1,1,-1};
 };
-/*
-boolean check if new spots x and y are valid spots for movement
-in board Board of size S
-*/
 bool safeMove(int x, int y)
 {
     return ((x >= 0 && x < 8) && (y >= 0 && y < 8)) ? true : false;
@@ -40,6 +32,16 @@ void clearStack(bool board[8][8])
         {
             board[i][j]=true;
         }
+}
+void printBoard(int board[8][8])
+{
+    for(int i=0;i<8;i++)
+    {
+        for(int j=0;j<8;j++)
+        {
+            std::cout<<board[i][j]<< std::endl;
+        }
+    }
 }
 
 int main()
