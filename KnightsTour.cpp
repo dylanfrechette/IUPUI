@@ -9,49 +9,43 @@ Mod History
 #include <math.h>
 #include <list>
 #include <stack>
-#include <vector>
 
-class Knight
+/*
+structs for holding knight's current square
+and various movement patterns
+*/
+struct currentSquare
 {
-public:
-
-    int xMove;
-    int yMove;
-    Knight(int xStart, int yStart, int bSize)
-    {
-        const int boardSize=bSize;
-        const int xStarting=xStart;
-        const int yStarting=yStart;
-        int wholeBoard[boardSize][boardSize];
-    }
-
-    void KnightMove(int xMove, int yMove)
-    {
-
-    }
-    /*
-    boolean check if new spots x and y are valid spots for movement
-    in board Board of size S
-    */
-    bool safeMove(int x, int y, int bSize)
-    {
-        return (x>=0 && x<bSize && y >=0 && y<bSize)?true:false;
-    }
+    int xSpot, ySpot;
 };
+//gives warning about inclass initialization being c++11 standard
+struct Move_pattern
+{
+    int xChoices[8] = {1, 1, 2, 2, -1, -1, -2, -2};
+    int yChoices[8] = {2, -2, 1, -1, 2, -2, 1, -1};
+};
+
+/*
+boolean check if new spots x and y are valid spots for movement
+in board Board of size S
+*/
+bool safeMove(int x, int y, int bSize)
+{
+    return (x >= 0 && x < bSize && y >= 0 && y < bSize) ? true : false;
+}
+
 int main()
 {
-    std::list<int> initalPos;
-    std::stack<int> prevMoves;
+    currentSquare boardPos;
+    std::stack<currentSquare> Moves;
     int boardSize;
-    int startX;
-    int startY;
 
     std::cout << "Welcome to the Knight's Tour\n";
     std::cout << "How big is your board?\n";
     std::cin >> boardSize;
     std::cout << "What would you like your knight's starting X coordinate to be?\n";
-    std::cin >> startX;
+    std::cin >> boardPos.xSpot;
     std::cout << "What would you like the starting y coordinate to be?\n";
-    std::cin >> startY;
-    Knight Gallahad(startX,startY,boardSize);
+    std::cin >> boardPos.ySpot;
+    Moves.push(boardPos);
 }
