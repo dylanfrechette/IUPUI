@@ -24,6 +24,35 @@ struct knightMoves
     int xMove[8]={1,1,-1,-1,2,2,-2,-2};
     int yMove[8]={2,-2,2,-2,1,-1,1,-1};
 };
+/*
+following structs and functions are generating Linked List
+first is node creation, second is empty head node
+insert() inserts new data into LL
+display() will print values of LL
+*/
+struct Node
+{
+    int data;
+    struct Node *next;
+};
+struct Node *head = NULL;
+void insert(int new_data)
+{
+    struct Node *new_node = (struct Node *)malloc(sizeof(struct Node));
+    new_node->data = new_data;
+    new_node->next = head;
+    head = new_node;
+}
+void display()
+{
+    struct Node *ptr;
+    ptr = head;
+    while (ptr != NULL)
+    {
+        std::cout << ptr->data << " ";
+        ptr = ptr->next;
+    }
+}
 //boolean to check if the space moved to is a valid board space
 bool safeMove(int x, int y)
 {
@@ -39,19 +68,23 @@ void clearStack(bool board[8][8])
         }
 }
 //print out completed board after running the algorithm
-void printBoard(int board[8][8])
+void printBoard(int board[8][8], std::ofstream file)
 {
     for(int i=0;i<8;i++)
     {
         for(int j=0;j<8;j++)
         {
-            std::cout<<board[i][j]<< std::endl;
+            //writes output to file provided in function declaration
+            file<<board[i][j]<< std::endl;
         }
     }
 }
 
 int main()
 {
+    //opening file to write outputs to
+    std::ofstream myFile;
+    myFile.open("KTOutput.txt");
     currentSquare boardPos;
     std::stack<currentSquare> Moves;
 
@@ -64,5 +97,5 @@ int main()
     std::cin >> boardPos.ySpot;
     Moves.push(boardPos);
     board[boardPos.xSpot][boardPos.ySpot]=false;
-
+    myFile.close();
 }
