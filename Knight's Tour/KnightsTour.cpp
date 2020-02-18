@@ -1,6 +1,6 @@
 /*
 Dylan Frechette
-Knights Tour Backtracking Algorithm
+Knights Tour; Half-Backtracking Half-Warnsdorff's Algorithm
 Created: 09/02/20
 */
 
@@ -10,21 +10,26 @@ Created: 09/02/20
 #include <math.h>
 #include <list>
 #include <stack>
+#include <fstream>
 
+//structure to generate and hold squares to store in stack
 struct currentSquare
 {
     int xSpot;
     int ySpot;
 };
+//structure to hold arrays for all possible knight movements
 struct knightMoves
 {
     int xMove[8]={1,1,-1,-1,2,2,-2,-2};
     int yMove[8]={2,-2,2,-2,1,-1,1,-1};
 };
+//boolean to check if the space moved to is a valid board space
 bool safeMove(int x, int y)
 {
     return ((x >= 0 && x < 8) && (y >= 0 && y < 8)) ? true : false;
 }
+//clear stack with each iteration of the algorithm
 void clearStack(bool board[8][8])
 {
     for(int i=0;i<8;i++)
@@ -33,6 +38,7 @@ void clearStack(bool board[8][8])
             board[i][j]=true;
         }
 }
+//print out completed board after running the algorithm
 void printBoard(int board[8][8])
 {
     for(int i=0;i<8;i++)
