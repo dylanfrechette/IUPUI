@@ -11,91 +11,137 @@ Created: 09/02/20
 #include <list>
 #include <stack>
 #include <fstream>
+//defining a set value to be size of chessboard for logical purposes
+#define N 8
 
-//structure to generate and hold squares to store in stack
-struct currentSquare
-{
-    int xSpot;
-    int ySpot;
-};
-//structure to hold arrays for all possible knight movements
-struct knightMoves
-{
-    int xMove[8]={1,1,-1,-1,2,2,-2,-2};
-    int yMove[8]={2,-2,2,-2,1,-1,1,-1};
-};
+// Move patterns for x and y coordinates 
+static int moveX[N] = {1,1,2,2,-1,-1,-2,-2}; 
+static int moveY[N] = {2,-2,1,-1,2,-2,1,-1}; 
+//checks if spot is on board
+bool onBoard(int x, int y) 
+{ 
+    return ((x >= 0 && y >= 0) && (x < N && y < N)); 
+} 
+// Checks whether a square is on board and empty
+bool isEmpty(int a[], int x, int y) 
+{ 
+    return (onBoard(x, y)) && (a[y*N+x] < 0); 
+} 
+/* Returns the number of empty squares adjacent 
+   to (x, y) */
+int getMvDeg(int a[], int x, int y) 
+{ 
+    int count = 0; 
+    for (int i = 0; i < N; ++i) 
+        if (isEmpty(a, (x + moveX[i]), (y + moveY[i]))) 
+            count++; 
+  
+    return count; 
+} 
 /*
-following structs and functions are generating Linked List
-first is node creation, second is empty head node
-insert() inserts new data into LL
-display() will print values of LL
+Picks next point using Warnsdorff, 
+returns false if it is not possible to pick next point. 
 */
-struct Node
-{
-    int data;
-    struct Node *next;
-};
-struct Node *head = NULL;
-void insert(int new_data)
-{
-    struct Node *new_node = (struct Node *)malloc(sizeof(struct Node));
-    new_node->data = new_data;
-    new_node->next = head;
-    head = new_node;
-}
-void display()
-{
-    struct Node *ptr;
-    ptr = head;
-    while (ptr != NULL)
-    {
-        std::cout << ptr->data << " ";
-        ptr = ptr->next;
-    }
-}
-//boolean to check if the space moved to is a valid board space
-bool safeMove(int x, int y)
-{
-    return ((x >= 0 && x < 8) && (y >= 0 && y < 8)) ? true : false;
-}
-//clear stack with each iteration of the algorithm
-void clearStack(bool board[8][8])
-{
-    for(int i=0;i<8;i++)
-        for(int j=0;j<8;j++)
-        {
-            board[i][j]=true;
-        }
-}
-//print out completed board after running the algorithm
-void printBoard(int board[8][8], std::ofstream file)
-{
-    for(int i=0;i<8;i++)
-    {
-        for(int j=0;j<8;j++)
-        {
-            //writes output to file provided in function declaration
-            file<<board[i][j]<< std::endl;
-        }
-    }
-}
+bool nextMove(int a[], int *x, int *y) 
+{ 
+    int min_deg_idx = -1, c, min_deg = (N+1), nx, ny; 
+    /*
+    Try all N adjacent of (*x, *y) starting 
+    from random pick. Find the adjacent 
+    with minimum degree. 
+    */
+    int start = rand()%N; 
+    for (int count = 0; count < N; ++count) 
+    { 
+        int i = (start + count)%N; 
+        nx = *x + moveX[i]; 
+        ny = *y + moveY[i]; 
+        if ((isEmpty(a, nx, ny)) && 
+           (c = getMvDeg(a, nx, ny)) < min_deg) 
+        { 
+            min_deg_idx = i; 
+            min_deg = c; 
+        } 
+    } 
+    //can't find a next point
+    if (min_deg_idx == -1) 
+        //std::cout <<"Couldn't complete path, try again\n";
+        return false; 
+  
+    // Store next point 
+    nx = *x + moveX[min_deg_idx]; 
+    ny = *y + moveY[min_deg_idx]; 
+  
+    // Mark next move on board
+    a[ny*N + nx] = a[(*y)*N + (*x)]+1; 
+  
+    // Update next point 
+    *x = nx; 
+    *y = ny; 
+  
+    return true; 
+} 
+//display board with all moves
+void print(int a[]) 
+{ 
+    for (int i = 0; i < N; ++i) 
+    { 
+        for (int j = 0; j < N; ++j) 
+            printf("%d\t",a[j*N+i]); 
+        printf("\n"); 
+    } 
+} 
+//checks knight's neighboring squares
+//if knight ends on square one move from start square, tour is complete
+bool neighborSq(int x, int y, int xx, int yy) 
+{ 
+    for (int i = 0; i < N; ++i) 
+        if (((x+moveX[i]) == xx)&&((y + moveY[i]) == yy)) 
+            return true; 
+  
+    //std::cout <<"Couldn't complete path, try again\n";
+    return false; 
+} 
+//makes moves using Warnsdorff, returns false if can't
+bool completeTour() 
+{ 
+    // Fill board matrix with -1's 
+    int a[N*N]; 
+    for (int i = 0; i< N*N; ++i) 
+        a[i] = -1; 
+   
+    int sx = rand()%N; 
+    int sy = rand()%N; 
+    // int sx, sy;
+    // //having issues, sometimes works, sometimes doesn't when
+    // //using input, sometimes just need to input twice
+    // std::cout<<"Pick an x coordinate\n";
+    // std::cin>>sx;
+    // std::cout<<"Pick a y coordinate\n";
+    // std::cin >> sy;
+    // Current points are same as initial points 
+    int x = sx, y = sy; 
+    //Mark first location on board
+    a[y*N+x] = 1; 
+    // continue picking points using Warnsdorff
+    for (int i = 0; i < N*N-1; ++i) 
+        if (nextMove(a, &x, &y) == 0) 
+            return false; 
+    //Check if tour Can end at starting point
+    if (!neighborSq(x, y, sx, sy)) 
+        return false; 
 
-int main()
-{
-    //opening file to write outputs to
-    std::ofstream myFile;
-    myFile.open("KTOutput.txt");
-    currentSquare boardPos;
-    std::stack<currentSquare> Moves;
+    print(a); 
+    return true; 
+} 
 
-    bool board[8][8];
-    clearStack(board);
-
-    std::cout << "What would you like your knight's starting X coordinate to be?\n";
-    std::cin >> boardPos.xSpot;
-    std::cout << "What would you like the starting y coordinate to be?\n";
-    std::cin >> boardPos.ySpot;
-    Moves.push(boardPos);
-    board[boardPos.xSpot][boardPos.ySpot]=false;
-    myFile.close();
-}
+int main() 
+{ 
+    srand(time(NULL));
+    //Continue until solution found 
+    while (!completeTour()) 
+    { 
+    ; 
+    } 
+    return 0; 
+} 
