@@ -1,170 +1,67 @@
 public class BST // binary search tree
 {
-    LinkedList<String> TextRead=new LinkedList<String>();
-    private class GenNode
+    //create TreeNode class
+    private class TreeNode
     {
         Comparable data;
-        GenNode left;
-        GenNode right;
+        TreeNode left;
+        TreeNode right;
     }
-    GenNode root;
-    int count;
-
+    TreeNode root;
+    //create new empty BST
     public BST()
     {
-        root=null; count=0;
+        root=null;
     }
-    public void makeEmpty()
+    //empty BST, shouldn't need
+    public void emptyTree()
     {
-        root=null; count=0;
+        root=null;
     }
-
-    public int size() { return count; }
-    public boolean isEmpty() { return count<=0; }
-    public boolean isFull() { return false; }
-
-    public Comparable lookup(Comparable x)
-    {
-        return lookhelp(root,x);
-    }
-    private Comparable lookhelp(GenNode r, Comparable x)
-    {
-        if(r==null) return null;
-        if(x.compareTo(r.data)==0)
-            return r.data;
-        if(x.compareTo(r.data)<0)
-            return lookhelp(r.left,x);
-        else
-            return lookhelp(r.right,x);
-    }
-
+    //insert data into tree
     public void insert(Comparable x)
     {
-        root=inserthelp(root,x);
+        root=inserthelp(root, x);
     }
-    private Node inserthelp(GenNode r, Comparable x)
+    //extra function called to help in inserting
+    private Node insertHelp(TreeNode r, Comparable x)
     {
         if(r==null)
         {
-            GenNode newnode=new GenNode();
-            newnode.data=x;
-            newnode.left=newnode.right=null;
-            count++;
-            return newnode;
-        }
-        if(x.compareTo(r.data)<0) // x<r.data
-        {
-            r.left=inserthelp(r.left,x);
-            return r;
-        }
-        else
-        {
-            r.right=inserthelp(r.right,x);
-            return r;
-        }
-    }
-
-    public Comparable delete(Comparable x)
-    {
-        root=deletehelp(root,x);
-        return saveditemtodelete;
-    }
-    Comparable saveditemtodelete;
-    private GenNode deletehelp(GenNode r, Comparable x)
-    {
-        if(r==null)
-        {
-            return null;
-        }
-        if(r.data.compareTo(x)==0) // x is in the root
-        {
-            // count children
-            // 0 children
-            if(r.left==null && r.right==null)
-            {
-                count--;
-                saveditemtodelete=r.data;
-                return null;
-            }
-            if(r.left==null) // 1 child, a right child
-            {
-                count--;
-                saveditemtodelete=r.data;
-                return r.right;
-            }
-            if(r.right==null) // 1 child, a left child
-            {
-                count--;
-                saveditemtodelete=r.data;
-                return r.left;
-            }
-            // 2 children
-            Comparable is=min(r.right); // is=inorder successor
-            // min(r) is the smallest data item in r's subtree
-            r.right=deletehelp(r.right,is);
-            saveditemtodelete=r.data;
-            r.data=is;
-            return r;
+            TreeNode newNode=new TreeNode();
+            newNode.data=x;
+            newNode.left=newNode.right=null;
+            return newNode;
         }
         if(x.compareTo(r.data)<0)
         {
-            r.left=deletehelp(r.left,x);
-            return r;
+            r.left=insertHelp(r.left,x);
         }
         else
         {
-            r.right=deletehelp(r.right,x);
-            return r;
+            r.right=insertHelp(r.right,x);
         }
     }
-
-    private Comparable min(treenode r)
+    //search for a value in tree, don't think I'll need, but just in case
+    public Comparable search(Comparable x)
+    {
+        return searchHelp(root, x);
+    }
+    //function to assist in search
+    private Comparable searchHelp(TreeNode r, Comparable x)
     {
         if(r==null) return null;
-        if(r.left==null) return r.data;
-        return min(r.left);
+        if(x.compareTo(r.data)==0) return r.data;
+        if(x.compareTo(r.data)<0) return searchHelp(r.left,x);
+        else return searchHelp(r.right,x);
     }
-
-    public void print() { printhelp(root); }
-    private void printhelp(treenode r)
-    {
-        if(r==null) return;
-        printhelp(r.left);
-        System.out.println(r.data);
-        printhelp(r.right);
+    //run an inorder traversal to printout values
+    public void inOrder(TreeNode x) {
+        if (x != null) {
+            inOrder(x.left);
+            // Visit the node by Printing the node data
+            System.out.printf("%d ", x.data);
+            inOrder(x.right);
+        }
     }
 }
-//     Queue fangorn;
-
-//     public static final int PREORDER=0;
-//     public static final int INORDER=1;
-//     public static final int POSTORDER=2;
-
-//     public void reset(int order)
-//     {
-//         if(fangorn==null)
-//             fangorn=new QueueLL();
-//         else
-//             fangorn.makeEmpty();
-//         traversal(root,order);
-//     }
-
-//     private void traversal(treenode r, int order)
-//     {
-//         if(r==null) return;
-//         if(order==PREORDER) fangorn.enqueue(r.data);
-//         traversal(r.left,order);
-//         if(order==INORDER) fangorn.enqueue(r.data);
-//         traversal(r.right,order);
-//         if(order==POSTORDER) fangorn.enqueue(r.data);
-//     }
-
-//     public Comparable getNext()
-//     {
-//         return (Comparable) fangorn.dequeue();
-//     }
-//     public boolean hasNext()
-//     {
-//         return !fangorn.isEmpty();
-//     }
-// }
