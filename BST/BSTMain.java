@@ -19,7 +19,6 @@ public class BSTMain //extends BST
                 //Integer i = hm.get(s);
                 hm.put(s, currentLine);
             }
-            // need to work here, i believe it's adding a count for each word
             currentString = txtRead.readLine();
             currentLine++;
         }
@@ -27,11 +26,16 @@ public class BSTMain //extends BST
     }
     public static void main(String[] args) throws FileNotFoundException, IOException
     {
-        //BST BinaryTree=new BST();
+        BST BinaryTree=new BST();
         HashMap<String, Integer> txtFileLine = new HashMap<String, Integer>();
         intoHash(txtFileLine);
-        //System.out.println(txtFileLine);
-        
+        //having issues here
+        List<String> hmList=new ArrayList<String>(txtFileLine.keySet());
+        for(String s: hmList)
+        {
+            BinaryTree.insert(s);
+        }
+        BinaryTree.printInorder(BinaryTree.root);
+        //System.out.println(txtFileLine);        
     }
-
 }

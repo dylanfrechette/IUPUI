@@ -61,12 +61,18 @@ public class BST // binary search tree
         else return searchHelp(r.right,x);
     }
     //run an inorder traversal to printout values
-    public void inOrder(TreeNode x) {
-        if (x != null) {
-            inOrder(x.left);
-            // Visit the node by Printing the node data
-            System.out.printf("%d ", x.data);
-            inOrder(x.right);
-        }
+    public void printInorder(TreeNode x) 
+    { 
+        if (x == null) 
+            return; 
+  
+        /* first recur on left child */
+        printInorder(x.left); 
+  
+        /* then print the data of node */
+        System.out.print(x.data + "\n"); 
+  
+        /* now recur on right child */
+        printInorder(x.right); 
     } 
 }
