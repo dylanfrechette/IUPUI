@@ -1,3 +1,6 @@
+import java.io.*;
+import java.util.*;
+
 public class BST // binary search tree
 {
     //create TreeNode class
@@ -21,10 +24,10 @@ public class BST // binary search tree
     //insert data into tree
     public void insert(Comparable x)
     {
-        root=inserthelp(root, x);
+        root=insertHelp(root, x);
     }
     //extra function called to help in inserting
-    private Node insertHelp(TreeNode r, Comparable x)
+    private TreeNode insertHelp(TreeNode r, Comparable x)
     {
         if(r==null)
         {
@@ -36,10 +39,12 @@ public class BST // binary search tree
         if(x.compareTo(r.data)<0)
         {
             r.left=insertHelp(r.left,x);
+            return r;
         }
         else
         {
             r.right=insertHelp(r.right,x);
+            return r;
         }
     }
     //search for a value in tree, don't think I'll need, but just in case
@@ -63,5 +68,5 @@ public class BST // binary search tree
             System.out.printf("%d ", x.data);
             inOrder(x.right);
         }
-    }
+    } 
 }
